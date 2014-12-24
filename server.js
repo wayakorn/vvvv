@@ -1,19 +1,18 @@
+var finalhandler = require('finalhandler');
 var http = require('http');
-var router = require('router');
-var route = router();
+var Router = require('router');
 
-route.get('/', function(req, res) {
-	res.writeHead(200);
-	res.end('At ROOT');
-});
-route.get('/{base}', function(req, res) {
-	var base = req.params.base; // ex: if the path is /foo/bar, then base = foo
+var router = new Router();
 
-	res.writeHead(80);
-	var body = 'Hello World<br>';
-	body += base;
-	res.end(body);
+router.get('/', function (req, res) {
+	res.setHeader('Content-Type', 'text/plain; charset=utf-8');
+	res.end('hello, world!');
 });
 
+var server = http.createServer(function app(req, res) {
+	router(req, res, finalhandler(req, res));
+});
 
-http.createServer(route).listen(80); // start the server on port 80
+server.listen(80, function onListening() {
+	console.log('http server listening on port ' + this.address().port);
+})
