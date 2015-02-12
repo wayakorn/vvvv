@@ -25,7 +25,8 @@ router.get('/list/?:fromId([0-9]+)?', function(req, res) {
         }
     }
 
-    res.setHeader('Content-Type', 'text/plain; charset=utf-8');
+    res.setHeader('content-type', 'text/plain; charset=utf-8');
+    res.setHeader('cache-control', 'no-cache');
     res.end(body + '\n\n');
 });
 
@@ -33,6 +34,16 @@ router.get('/list/?:fromId([0-9]+)?', function(req, res) {
 router.get('/add/:data', function(req, res) {
     var item = req.params.data;
     if (item) {
+        g_currentId++;
+        g_items.push({id:g_currentId, data:item});
+    }
+    returnId(req, res);
+});
+router.post('/add', function(req, res) {
+    if (req.body) {
+		console.log(req.headers);
+		console.log(req.body);
+		var item = req.body.toString();
         g_currentId++;
         g_items.push({id:g_currentId, data:item});
     }
@@ -51,7 +62,8 @@ router.get('/id', returnId);
 
 function returnId(req, res) {
     var body = g_currentId.toString();
-    res.setHeader('Content-Type', 'text/plain; charset=utf-8');
+    res.setHeader('content-type', 'text/plain; charset=utf-8');
+    res.setHeader('cache-control', 'no-cache');
     res.end(body + '\n\n');
 }
 
